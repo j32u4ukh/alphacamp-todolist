@@ -32,3 +32,11 @@ npx sequelize model:generate --name Todo --attributes name:string
 
 * up： `npx sequelize db:migrate`。
 * down： `npx sequelize db:migrate:undo`。
+
+## Seed
+
+建立 Seed 檔案: `npx sequelize seed:generate --name initial-data`
+
+執行 Seeder: `npx sequelize db:seed:all`
+
+撤銷 Seeder: `npx sequelize db:seed:undo`
