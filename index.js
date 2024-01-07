@@ -2,6 +2,8 @@ const express = require("express");
 const { engine } = require("express-handlebars");
 const app = express();
 const port = 3000;
+const db = require("./models");
+const Todo = db.Todo;
 
 app.engine(".hbs", engine({ extname: ".hbs" }));
 app.set("view engine", ".hbs");
@@ -13,7 +15,13 @@ app.get("/", (req, res) => {
 });
 
 app.get("/todos", (req, res) => {
-  res.send("get all todos");
+  return Todo.findAll()
+    .then((todos) => {
+      res.send({ todos });
+    })
+    .catch((err) => {
+      res.status(422).json(err);
+    });
 });
 
 app.post("/todos", (req, res) => {
