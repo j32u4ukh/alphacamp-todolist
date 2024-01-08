@@ -49,7 +49,18 @@ app.get("/todos/new", (req, res) => {
 });
 
 app.get("/todos/:id", (req, res) => {
-  res.send(`get todo: ${req.params.id}`);
+  const id = req.params.id;
+
+  return Todo.findByPk(id, {
+    attributes: ["id", "name"],
+    raw: true,
+  })
+    .then((todo) => {
+      res.render("todo", { todo });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
 app.put("/todos/:id", (req, res) => {
