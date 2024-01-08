@@ -5,13 +5,14 @@ const port = 3000;
 const db = require("./models");
 const Todo = db.Todo;
 
+// 設定 extname: '.hbs'，是指定副檔名為 .hbs，有了這行以後，我們才能把預設的長檔名改寫成短檔名。
 app.engine(".hbs", engine({ extname: ".hbs" }));
 app.set("view engine", ".hbs");
 app.set("views", "./views");
 app.use(express.static("public"));
 
 app.get("/", (req, res) => {
-  res.send("Hello World");
+  res.render("index");
 });
 
 app.get("/todos", (req, res) => {
