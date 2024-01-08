@@ -16,9 +16,13 @@ app.get("/", (req, res) => {
 });
 
 app.get("/todos", (req, res) => {
-  return Todo.findAll()
+  return Todo.findAll({
+    attributes: ["id", "name"],
+    raw: true,
+  })
     .then((todos) => {
-      res.send({ todos });
+      // res.send({ todos });
+      res.render("todos", { todos });
     })
     .catch((err) => {
       res.status(422).json(err);
