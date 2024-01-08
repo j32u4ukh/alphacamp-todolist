@@ -1,5 +1,6 @@
 const express = require("express");
 const { engine } = require("express-handlebars");
+const methodOverride = require("method-override");
 const app = express();
 const port = 3000;
 const db = require("./models");
@@ -13,6 +14,9 @@ app.use(express.static("public"));
 
 // 需要使用 express.urlencoded 來從請求網址中獲取表單資料，否則就會回傳 undefined
 app.use(express.urlencoded({ extended: true }));
+
+// 「覆寫 (override)」HTTP 方法，允許表單傳送 GET 和 POST 以外的方法
+app.use(methodOverride("_method"));
 
 app.get("/", (req, res) => {
   res.render("index");
@@ -64,7 +68,12 @@ app.get("/todos/:id", (req, res) => {
 });
 
 app.put("/todos/:id", (req, res) => {
-  res.send(`modify todo: ${req.params.id}`);
+  const body = req.body;
+  const id = req.params.id;
+
+  return Todo.update({ name: body.name }, { where: { id } }).then(() => {
+    res.redirect(`/todos/${id}`);
+  });
 });
 
 app.delete("/todos/:id", (req, res) => {
@@ -72,7 +81,14 @@ app.delete("/todos/:id", (req, res) => {
 });
 
 app.get("/todos/:id/edit", (req, res) => {
-  res.send(`get todo edit: ${req.params.id}`);
+  const id = req.params.id;
+
+  return Todo.findByPk(id, {
+    attributes: ["id", "name"],
+    raw: true,
+  }).then((todo) => {
+    res.render("edit", { todo });
+  });
 });
 
 app.listen(port, () => {
