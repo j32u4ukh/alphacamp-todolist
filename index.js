@@ -24,11 +24,10 @@ app.get("/", (req, res) => {
 
 app.get("/todos", (req, res) => {
   return Todo.findAll({
-    attributes: ["id", "name"],
+    attributes: ["id", "name", "is_complete"],
     raw: true,
   })
     .then((todos) => {
-      // res.send({ todos });
       res.render("todos", { todos });
     })
     .catch((err) => {
@@ -56,10 +55,11 @@ app.get("/todos/:id", (req, res) => {
   const id = req.params.id;
 
   return Todo.findByPk(id, {
-    attributes: ["id", "name"],
+    attributes: ["id", "name", "is_complete"],
     raw: true,
   })
     .then((todo) => {
+      console.log(`todo: ${JSON.stringify(todo)}`);
       res.render("todo", { todo });
     })
     .catch((err) => {
@@ -68,10 +68,16 @@ app.get("/todos/:id", (req, res) => {
 });
 
 app.put("/todos/:id", (req, res) => {
-  const body = req.body;
+  const { name, is_complete } = req.body;
   const id = req.params.id;
 
-  return Todo.update({ name: body.name }, { where: { id } }).then(() => {
+  return Todo.update(
+    {
+      name: name,
+      is_complete: is_complete === "completed",
+    },
+    { where: { id } }
+  ).then(() => {
     res.redirect(`/todos/${id}`);
   });
 });
@@ -88,7 +94,7 @@ app.get("/todos/:id/edit", (req, res) => {
   const id = req.params.id;
 
   return Todo.findByPk(id, {
-    attributes: ["id", "name"],
+    attributes: ["id", "name", "is_complete"],
     raw: true,
   }).then((todo) => {
     res.render("edit", { todo });
