@@ -30,6 +30,10 @@ npx sequelize model:generate --name Todo --attributes name:string
 
 ## Migration
 
+```
+npx sequelize migration:generate --name migrationName
+```
+
 * up： `npx sequelize db:migrate`。
 * down： `npx sequelize db:migrate:undo`。
 
