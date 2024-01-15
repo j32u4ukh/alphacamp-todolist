@@ -3,6 +3,7 @@ const { engine } = require("express-handlebars");
 const methodOverride = require("method-override");
 const flash = require("connect-flash");
 const session = require("express-session");
+const db = require("./models");
 
 // 引用路由器
 const router = require("./routes");
@@ -11,9 +12,15 @@ const router = require("./routes");
 const messageHandler = require("./middlewares/message-handler");
 const errorHandler = require("./middlewares/error-handler");
 
+// NOTE: Powershell 設置環境變數指令 ```$env:VariableName = "VariableValue"```
+if (process.env.NODE_ENV === "development") {
+  require("dotenv").config();
+}
+
+console.log(`SESSION_SECRET: ${process.env.SESSION_SECRET}`);
+
 const app = express();
 const port = 3000;
-const db = require("./models");
 const Todo = db.Todo;
 
 // 設定 extname: '.hbs'，是指定副檔名為 .hbs，有了這行以後，我們才能把預設的長檔名改寫成短檔名。
@@ -34,7 +41,7 @@ app.use(methodOverride("_method"));
 // saveUninitialized：強制將未初始化的 session 存回 session store。未初始化表示這個 session 是新的而且沒有被修改過，例如未登入的使用者的 session。
 app.use(
   session({
-    secret: "ThisIsSecret",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
   })
