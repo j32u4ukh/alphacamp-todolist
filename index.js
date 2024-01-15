@@ -44,7 +44,7 @@ app.get("/todos", (req, res) => {
     raw: true,
   })
     .then((todos) => {
-      res.render("todos", { todos, message: req.flash("success") });
+      res.render("todos", { todos, message: req.flash("message") });
     })
     .catch((err) => {
       res.status(422).json(err);
@@ -54,14 +54,22 @@ app.get("/todos", (req, res) => {
 app.post("/todos", (req, res) => {
   const name = req.body.name;
 
-  return Todo.create({ name })
-    .then(() => {
-      req.flash("success", "新增成功!");
-      res.redirect("/todos");
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  if (name === "") {
+    req.flash("message", "name 為必填欄位");
+    res.redirect("/todos");
+  } else {
+    return Todo.create({ name })
+      .then(() => {
+        req.flash("message", "新增成功!");
+      })
+      .catch((err) => {
+        req.flash("message", "新增失敗!");
+        console.log(err);
+      })
+      .finally(() => {
+        res.redirect("/todos");
+      });
+  }
 });
 
 app.get("/todos/new", (req, res) => {
@@ -94,10 +102,17 @@ app.put("/todos/:id", (req, res) => {
       is_complete: is_complete === "completed",
     },
     { where: { id } }
-  ).then(() => {
-    req.flash("success", "更新成功!");
-    res.redirect(`/todos/${id}`);
-  });
+  )
+    .then(() => {
+      req.flash("message", "更新成功!");
+    })
+    .catch((err) => {
+      req.flash("message", "更新失敗!");
+      console.log(err);
+    })
+    .finally(() => {
+      res.redirect(`/todos/${id}`);
+    });
 });
 
 app.delete("/todos/:id", (req, res) => {
@@ -105,10 +120,17 @@ app.delete("/todos/:id", (req, res) => {
 
   return Todo.destroy({
     where: { id },
-  }).then(() => {
-    req.flash("success", "刪除成功!");
-    res.redirect("/todos");
-  });
+  })
+    .then(() => {
+      req.flash("message", "刪除成功!");
+    })
+    .catch((err) => {
+      req.flash("message", "刪除失敗!");
+      console.log(err);
+    })
+    .finally(() => {
+      res.redirect("/todos");
+    });
 });
 
 app.get("/todos/:id/edit", (req, res) => {
