@@ -7,6 +7,10 @@ const session = require("express-session");
 // 引用路由器
 const router = require("./routes");
 
+// 載入中間件
+const messageHandler = require("./middlewares/message-handler");
+const errorHandler = require("./middlewares/error-handler");
+
 const app = express();
 const port = 3000;
 const db = require("./models");
@@ -37,8 +41,13 @@ app.use(
 );
 app.use(flash());
 
+app.use(messageHandler);
+
 // 將 request 導入路由器
 app.use(router);
+
+// 錯誤處理
+app.use(errorHandler);
 
 app.listen(port, () => {
   console.log(`express server is running on http://localhost:${port}`);

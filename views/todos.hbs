@@ -1,9 +1,4 @@
-{{#if success_message}}
-<div>{{success_message}}</div>
-{{/if}}
-{{#if error_message}}
-<div>{{error_message}}</div>
-{{/if}}
+{{> message}}
 <a href="./todos/new">Create</a>
 <ul>
   {{#each todos}}
