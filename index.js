@@ -44,7 +44,11 @@ app.get("/todos", (req, res) => {
     raw: true,
   })
     .then((todos) => {
-      res.render("todos", { todos, message: req.flash("message") });
+      res.render("todos", {
+        todos,
+        success_message: req.flash("success"),
+        error_message: req.flash("error"),
+      });
     })
     .catch((err) => {
       res.status(422).json(err);
@@ -52,23 +56,26 @@ app.get("/todos", (req, res) => {
 });
 
 app.post("/todos", (req, res) => {
-  const name = req.body.name;
+  try {
+    const name = req.body.name;
 
-  if (name === "") {
-    req.flash("message", "name 為必填欄位");
+    if (name === "") {
+      req.flash("error", "name 為必填欄位");
+    } else {
+      Todo.create({ name })
+        .then(() => {
+          req.flash("success", "新增成功!");
+        })
+        .catch((err) => {
+          req.flash("error", "新增失敗!");
+          console.log(err);
+        });
+    }
+  } catch (error) {
+    req.flash("error", "新增失敗!");
+    console.log(err);
+  } finally {
     res.redirect("/todos");
-  } else {
-    return Todo.create({ name })
-      .then(() => {
-        req.flash("message", "新增成功!");
-      })
-      .catch((err) => {
-        req.flash("message", "新增失敗!");
-        console.log(err);
-      })
-      .finally(() => {
-        res.redirect("/todos");
-      });
   }
 });
 
@@ -77,60 +84,79 @@ app.get("/todos/new", (req, res) => {
 });
 
 app.get("/todos/:id", (req, res) => {
-  const id = req.params.id;
+  try {
+    const id = req.params.id;
 
-  return Todo.findByPk(id, {
-    attributes: ["id", "name", "is_complete"],
-    raw: true,
-  })
-    .then((todo) => {
-      console.log(`todo: ${JSON.stringify(todo)}`);
-      res.render("todo", { todo });
+    return Todo.findByPk(id, {
+      attributes: ["id", "name", "is_complete"],
+      raw: true,
     })
-    .catch((err) => {
-      console.log(err);
-    });
+      .then((todo) => {
+        console.log(`todo: ${JSON.stringify(todo)}`);
+        res.render("todo", { todo });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.redirect("/todos");
+      });
+  } catch (error) {
+    req.flash("error", "查看特定 todo 失敗!");
+    console.log(err);
+    res.redirect("/todos");
+  }
 });
 
 app.put("/todos/:id", (req, res) => {
-  const { name, is_complete } = req.body;
-  const id = req.params.id;
+  try {
+    const { name, is_complete } = req.body;
+    const id = req.params.id;
 
-  return Todo.update(
-    {
-      name: name,
-      is_complete: is_complete === "completed",
-    },
-    { where: { id } }
-  )
-    .then(() => {
-      req.flash("message", "更新成功!");
-    })
-    .catch((err) => {
-      req.flash("message", "更新失敗!");
-      console.log(err);
-    })
-    .finally(() => {
-      res.redirect(`/todos/${id}`);
-    });
+    return Todo.update(
+      {
+        name: name,
+        is_complete: is_complete === "completed",
+      },
+      { where: { id } }
+    )
+      .then(() => {
+        req.flash("success", "更新成功!");
+      })
+      .catch((err) => {
+        req.flash("error", "更新失敗!");
+        console.log(err);
+      })
+      .finally(() => {
+        res.redirect(`/todos/${id}`);
+      });
+  } catch (error) {
+    req.flash("error", "更新失敗!");
+    console.log(err);
+    res.redirect("/todos");
+  }
 });
 
 app.delete("/todos/:id", (req, res) => {
-  const id = req.params.id;
-
-  return Todo.destroy({
-    where: { id },
-  })
-    .then(() => {
-      req.flash("message", "刪除成功!");
+  try {
+    const id = req.params.id;
+    Todo.destroy({
+      where: { id },
     })
-    .catch((err) => {
-      req.flash("message", "刪除失敗!");
-      console.log(err);
-    })
-    .finally(() => {
-      res.redirect("/todos");
-    });
+      .then(() => {
+        req.flash("success", "刪除成功!");
+      })
+      .catch((err) => {
+        req.flash("error", "刪除失敗!");
+        console.log(err);
+      })
+      .finally(() => {
+        res.redirect("/todos");
+      });
+  } catch (error) {
+    req.flash("error", "刪除失敗!");
+    console.log(err);
+  } finally {
+    res.redirect("/todos");
+  }
 });
 
 app.get("/todos/:id/edit", (req, res) => {
