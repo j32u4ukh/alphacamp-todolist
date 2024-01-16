@@ -4,13 +4,19 @@ const router = express.Router();
 const Todo = db.Todo;
 
 router.get("/", (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = 10;
+
   return Todo.findAll({
     attributes: ["id", "name", "is_complete"],
     raw: true,
   })
     .then((todos) => {
       res.render("todos", {
-        todos,
+        todos: todos.slice((page - 1) * limit, page * limit),
+        prev: page > 1 ? page - 1 : page,
+        next: page + 1,
+        page,
       });
     })
     .catch((error) => {

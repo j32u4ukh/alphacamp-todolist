@@ -17,11 +17,8 @@ if (process.env.NODE_ENV === "development") {
   require("dotenv").config();
 }
 
-console.log(`SESSION_SECRET: ${process.env.SESSION_SECRET}`);
-
 const app = express();
 const port = 3000;
-const Todo = db.Todo;
 
 // 設定 extname: '.hbs'，是指定副檔名為 .hbs，有了這行以後，我們才能把預設的長檔名改寫成短檔名。
 app.engine(".hbs", engine({ extname: ".hbs" }));
