@@ -44,3 +44,7 @@ npx sequelize migration:generate --name migrationName
 執行 Seeder: `npx sequelize db:seed:all`
 
 撤銷 Seeder: `npx sequelize db:seed:undo`
+
+```
+$env:NODE_ENV="development"
+```
