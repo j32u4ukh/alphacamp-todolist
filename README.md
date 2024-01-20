@@ -48,3 +48,18 @@ npx sequelize migration:generate --name migrationName
 ```
 $env:NODE_ENV="development"
 ```
+
+## 部屬
+
+### 初始化
+
+```
+eb init
+eb create
+```
+
+### 上傳到 AWS
+
+```
+eb deploy
+```
