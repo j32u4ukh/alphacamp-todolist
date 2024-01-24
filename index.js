@@ -3,7 +3,7 @@ const { engine } = require("express-handlebars");
 const methodOverride = require("method-override");
 const flash = require("connect-flash");
 const session = require("express-session");
-const db = require("./models");
+const passport = require("passport");
 
 // 引用路由器
 const router = require("./routes");
@@ -44,6 +44,8 @@ app.use(
   })
 );
 app.use(flash());
+
+app.use(passport.initialize());
 
 app.use(messageHandler);
 

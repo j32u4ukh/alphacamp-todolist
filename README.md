@@ -45,21 +45,26 @@ npx sequelize migration:generate --name migrationName
 
 撤銷 Seeder: `npx sequelize db:seed:undo`
 
+## 依賴套件安裝
+
+### 安裝套件 passport 與 passport-local
+```
+npm install passport@0.6.0 passport-local@1.0.0
+```
+
+## 環境變數
 ```
 $env:NODE_ENV="development"
 ```
 
 ## 部屬
-
 ### 初始化
-
 ```
 eb init
 eb create
 ```
 
 ### 上傳到 AWS
-
 ```
 eb deploy
 ```
