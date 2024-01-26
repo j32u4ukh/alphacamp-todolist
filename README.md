@@ -1,6 +1,18 @@
 # alphacamp-todolist
 Alphacamp todo list 專案
 
+## 專案執行
+
+### VS code 設置環境變數
+```
+$env:NODE_ENV="development"
+```
+
+### 程式運行
+```
+npm run dev
+```
+
 ## 初始化
 ### Step 1 安裝相關套件
 
@@ -52,10 +64,6 @@ npx sequelize migration:generate --name migrationName
 npm install passport@0.6.0 passport-local@1.0.0
 ```
 
-## 環境變數
-```
-$env:NODE_ENV="development"
-```
 
 ## 部屬
 ### 初始化
