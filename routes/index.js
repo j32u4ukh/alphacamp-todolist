@@ -35,8 +35,10 @@ passport.serializeUser((user, done) => {
 
 // 準備引入路由模組
 const todos = require("./todos");
+const users = require("./users");
 
 router.use("/todos", todos);
+router.use("/users", users);
 
 router.get("/", (req, res) => {
   res.render("index");

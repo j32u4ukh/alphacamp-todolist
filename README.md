@@ -40,6 +40,8 @@ npx sequelize init
 npx sequelize model:generate --name Todo --attributes name:string
 ```
 
+這個指令會同時生成 migrations 和 models 當中的檔案，新建表格時可以使用這個。
+
 ## Migration
 
 ```

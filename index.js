@@ -29,6 +29,9 @@ app.use(express.static("public"));
 // 需要使用 express.urlencoded 來從請求網址中獲取表單資料，否則就會回傳 undefined
 app.use(express.urlencoded({ extended: true }));
 
+// 取得 body 中的 json 數據
+app.use(express.json());
+
 // 「覆寫 (override)」HTTP 方法，允許表單傳送 GET 和 POST 以外的方法
 app.use(methodOverride("_method"));
 
