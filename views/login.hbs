@@ -1,13 +1,21 @@
+<h2>Login</h2>
 {{> message}}
-<form action="/login" method="POST" class="m-3">
-  <div class="m-1">
-    <label>Email:</label>
-    <input type="text" placeholder="email" name="email" required>
-  </div>
-  <div class="m-1">
-    <label>Password:</label>
-    <input type="password" placeholder="password" name="password" required>
-  </div>
-  <button type="submit">Login</button>
-  <p>No account? <a href="/register">Register</a></p>
+<form action="/login" method="POST">
+    <div>
+        <div>
+            <label for="email">Email</label>
+        </div>
+        <input type="email" name="email" placeholder="Enter email" required>
+    </div>
+    <div>
+        <div>
+            <label for="password">Password</label>
+        </div>
+        <input type="password" name="password" placeholder="Enter password" required>
+    </div>
+    <button type="submit">Login</button>
 </form>
+<div>
+    <span>No account?</span>
+    <a href="/register">Register</a>
+</div>

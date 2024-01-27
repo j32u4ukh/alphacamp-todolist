@@ -8,7 +8,7 @@ router.get("/", (req, res) => {
   const limit = 10;
 
   return Todo.findAll({
-    attributes: ["id", "name", "is_complete"],
+    attributes: ["id", "name", "isComplete"],
     offset: (page - 1) * limit,
     limit,
     raw: true,
@@ -53,7 +53,7 @@ router.get("/:id", (req, res, next) => {
   const id = req.params.id;
 
   return Todo.findByPk(id, {
-    attributes: ["id", "name", "is_complete"],
+    attributes: ["id", "name", "isComplete"],
     raw: true,
   })
     .then((todo) => {
@@ -67,13 +67,13 @@ router.get("/:id", (req, res, next) => {
 });
 
 router.put("/:id", (req, res, next) => {
-  const { name, is_complete } = req.body;
+  const { name, isComplete } = req.body;
   const id = req.params.id;
 
   return Todo.update(
     {
       name: name,
-      is_complete: is_complete === "completed",
+      isComplete: isComplete === "completed",
     },
     { where: { id } }
   )
@@ -106,7 +106,7 @@ router.get("/:id/edit", (req, res) => {
   const id = req.params.id;
 
   return Todo.findByPk(id, {
-    attributes: ["id", "name", "is_complete"],
+    attributes: ["id", "name", "isComplete"],
     raw: true,
   })
     .then((todo) => {

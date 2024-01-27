@@ -3,14 +3,16 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.addColumn("todos", "isComplete", {
-      type: Sequelize.BOOLEAN,
-      defaultValue: false,
+    await queryInterface.changeColumn("todos", "userId", {
+      type: Sequelize.INTEGER,
       allowNull: false,
     });
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.removeColumn("todos", "isComplete");
+    await queryInterface.changeColumn("todos", "userId", {
+      type: Sequelize.INTEGER,
+      allowNull: true,
+    });
   },
 };

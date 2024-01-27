@@ -66,7 +66,6 @@ npx sequelize migration:generate --name migrationName
 npm install passport@0.6.0 passport-local@1.0.0
 ```
 
-
 ## 部屬
 ### 初始化
 ```

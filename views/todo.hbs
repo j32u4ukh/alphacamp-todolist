@@ -1,6 +1,6 @@
 {{> message}}
 <p>
-    <input type="checkbox" disabled {{#if todo.is_complete}} checked {{/if}}>
+    <input type="checkbox" disabled {{#if todo.isComplete}} checked {{/if}}>
     {{ todo.name }}
 </p>
 <a href="/todos/{{todo.id}}/edit">edit</a>

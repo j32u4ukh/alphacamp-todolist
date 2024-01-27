@@ -8,15 +8,22 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Todo.belongsTo(models.User, {
+        // foreignKey 預設使用 belongsTo 表格名稱 + id
+        foreignKey: "userId",
+      });
     }
   }
   Todo.init(
     {
       name: DataTypes.STRING,
-      is_complete: {
+      isComplete: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
+        allowNull: false,
+      },
+      userId: {
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
     },
