@@ -30,7 +30,7 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 
 // 取得 body 中的 json 數據
-app.use(express.json());
+// app.use(express.json());
 
 // 「覆寫 (override)」HTTP 方法，允許表單傳送 GET 和 POST 以外的方法
 app.use(methodOverride("_method"));
