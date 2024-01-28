@@ -5,9 +5,6 @@ const flash = require("connect-flash");
 const session = require("express-session");
 const passport = require("passport");
 
-// 引用路由器
-const router = require("./routes");
-
 // 載入中間件
 const messageHandler = require("./middlewares/message-handler");
 const errorHandler = require("./middlewares/error-handler");
@@ -16,6 +13,9 @@ const errorHandler = require("./middlewares/error-handler");
 if (process.env.NODE_ENV === "development") {
   require("dotenv").config();
 }
+
+// 引用路由器
+const router = require("./routes");
 
 const app = express();
 const port = 3000;

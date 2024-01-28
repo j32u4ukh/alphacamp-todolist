@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
+const FacebookStrategy = require("passport-facebook");
 const bcrypt = require("bcryptjs");
 const authHandler = require("../middlewares/auth-handler");
 const db = require("../models");
@@ -32,6 +33,44 @@ passport.use(
         done(error);
       });
   })
+);
+
+passport.use(
+  new FacebookStrategy(
+    {
+      clientID: process.env.FACEBOOK_CLIENT_ID,
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+      callbackURL: process.env.FACEBOOK_CALLBACK_URL,
+      profileFields: ["email", "displayName"],
+    },
+    (accessToken, refreshToken, profile, done) => {
+      const email = profile.emails[0].value;
+      const name = profile.displayName;
+
+      return User.findOne({
+        attributes: ["id", "name", "email"],
+        where: { email: email },
+        raw: true,
+      })
+        .then((user) => {
+          if (user) {
+            return done(null, user);
+          }
+          const randomPwd = Math.random().toString(36).slice(-8);
+
+          return bcrypt
+            .hash(randomPwd, 10)
+            .then((hash) => User.create({ name, email, password: hash }))
+            .then((user) =>
+              done(null, { id: user.id, name: user.name, email: user.email })
+            );
+        })
+        .catch((error) => {
+          error.errorMessage = "登入失敗";
+          done(error);
+        });
+    }
+  )
 );
 
 // 這段程式碼設定了 passport 的使用者 serialize（序列化邏輯）。當驗證成功後，它會將使用者物件中的重要屬性 id、name 和 email序列化後傳遞給 done 函式。
@@ -70,6 +109,19 @@ router.get("/login", (req, res) => {
 router.post(
   "/login",
   passport.authenticate("local", {
+    successRedirect: "/todos",
+    failureRedirect: "/login",
+    failureFlash: true,
+  })
+);
+router.get(
+  "/login/facebook",
+  passport.authenticate("facebook", { scope: ["email"] })
+);
+
+router.get(
+  "/oauth2/redirect/facebook",
+  passport.authenticate("facebook", {
     successRedirect: "/todos",
     failureRedirect: "/login",
     failureFlash: true,

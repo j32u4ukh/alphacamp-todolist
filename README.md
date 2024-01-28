@@ -71,6 +71,12 @@ npm install passport@0.6.0 passport-local@1.0.0
 npm install bcryptjs@2.4.3
 ```
 
+### Facebook 第三方登入
+
+```
+npm install passport-facebook@3.0.0
+```
+
 ## 部屬
 ### 初始化
 ```
