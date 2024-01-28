@@ -3,16 +3,17 @@ const { engine } = require("express-handlebars");
 const methodOverride = require("method-override");
 const flash = require("connect-flash");
 const session = require("express-session");
-const passport = require("passport");
-
-// 載入中間件
-const messageHandler = require("./middlewares/message-handler");
-const errorHandler = require("./middlewares/error-handler");
 
 // NOTE: Powershell 設置環境變數指令 ```$env:VariableName = "VariableValue"```
 if (process.env.NODE_ENV === "development") {
   require("dotenv").config();
 }
+
+const passport = require("./config/passport");
+
+// 載入中間件
+const messageHandler = require("./middlewares/message-handler");
+const errorHandler = require("./middlewares/error-handler");
 
 // 引用路由器
 const router = require("./routes");
