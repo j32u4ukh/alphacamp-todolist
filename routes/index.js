@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
+const bcrypt = require("bcryptjs");
 const authHandler = require("../middlewares/auth-handler");
 const db = require("../models");
 const User = db.User;
@@ -15,11 +16,16 @@ passport.use(
       raw: true,
     })
       .then((user) => {
-        if (!user || user.password !== password) {
+        if (!user) {
           return done(null, false, { message: "email 或密碼錯誤" });
         }
-        console.log(`User: ${JSON.stringify(user)}`);
-        return done(null, user);
+        return bcrypt.compare(password, user.password).then((isMatch) => {
+          if (isMatch) {
+            return done(null, user);
+          } else {
+            return done(null, false, { message: "email 或密碼錯誤" });
+          }
+        });
       })
       .catch((error) => {
         error.errorMessage = "登入失敗";
